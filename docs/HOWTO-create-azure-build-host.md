@@ -91,15 +91,15 @@ if [ -z "$INSTANCE_NAME"]; then
 fi
 
 az vm create \
-    --resource-group $RESOURCE_GROUP \
-    --name $INSTANCE_NAME \
-    --image $MARINER_IMAGE \
-    --os-disk-size-gb 60 \
+	--resource-group $RESOURCE_GROUP \
+	--name $INSTANCE_NAME \
+	--image $MARINER_IMAGE \
+	--os-disk-size-gb 60 \
 	--size $SIZE \
 	--public-ip-sku Standard \
-    --admin-username $USERNAME \
-    --assign-identity [system] \
-    --ssh-key-values ~/.ssh/id_rsa_azure.pub \
+	--admin-username $USERNAME \
+	--assign-identity [system] \
+	--ssh-key-values ~/.ssh/id_rsa_azure.pub \
 	--location $LOCATION
 ```
 
