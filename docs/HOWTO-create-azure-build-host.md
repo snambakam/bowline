@@ -22,8 +22,10 @@ az account set --subscription <subscription uuid>
 MARINER_IMAGE_ARM64=MicrosoftCBLMariner:cbl-mariner:cbl-mariner-2-arm64:2.20220527.01
 MARINER_IMAGE_X86_64=MicrosoftCBLMariner:cbl-mariner:cbl-mariner-2:latest
 LOCATION=westus2
-SIZE=Standard_D16darm_V3
+SIZE_ARM64=Standard_D16darm_V3
+SIZE_X86_64=Standard_D16d_v4
 MARINER_IMAGE=
+SIZE=
 
 USERNAME=`whoami`
 RESOURCE_GROUP=$USERNAME-dev-test
@@ -35,10 +37,11 @@ function showUsage() {
     echo "   -a <arch>: List images for specified architecture"
     echo "              arch: { x86_64, arm64}"
     echo "   -r <resource group>: Azure Resource Group to place VM"
+    echo "   -l <location>: Azure Location"
     echo "   -h:        show this help message"
 }
 
-optstring="ar:h"
+optstring="arl:h"
 
 while getopts ${optstring} arg; do
   case ${arg} in
@@ -48,6 +51,9 @@ while getopts ${optstring} arg; do
       ;;
     a)
       ARCH=$OPTARG
+      ;;
+    l)
+      LOCATION=$OPTARG
       ;;
     r)
       RESOURCE_GROUP=$OPTARG
@@ -71,12 +77,20 @@ if [ -z "$RESOURCE_GROUP" ]; then
     exit 1
 fi
 
+if [ -z "$LOCATION" ]; then
+    echo "Error: Invalid location specified - [$LOCATION]"
+    showUsage
+    exit 1
+fi
+
 case $ARCH in
     x86_64)
         MARINER_IMAGE=$MARINER_IMAGE_X86_64
+        SIZE=$SIZE_X86_64
         ;;
     arm64)
         MARINER_IMAGE=$MARINER_IMAGE_ARM64
+        SIZE=$SIZE_ARM64
         ;;
     *)
         echo "Error: Invalid architecture specified - [$ARCH]"
