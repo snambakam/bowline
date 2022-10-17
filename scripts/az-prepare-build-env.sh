@@ -2,8 +2,10 @@
 
 sudo tdnf install -y \
 	bison \
+	build-essential \
 	cdrkit \
 	curl \
+	fakeroot \
 	gawk \
 	git \
 	golang \
@@ -15,7 +17,9 @@ sudo tdnf install -y \
 	parted \
 	pigz \
 	rpm \
+	rpmdevtools \
 	tar \
+	vim \
 	wget
 
 sudo usermod -aG docker $USER
