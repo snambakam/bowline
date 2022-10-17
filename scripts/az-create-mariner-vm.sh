@@ -17,12 +17,13 @@ function showUsage() {
     echo "Usage: az-list-mariner-images.sh <options>"
     echo "   -a <arch>: List images for specified architecture"
     echo "              arch: { x86_64, arm64}"
-    echo "   -r <resource group>: Azure Resource Group to place VM"
+    echo "   -i <instance name>"
     echo "   -l <location>: Azure Location"
+    echo "   -r <resource group>: Azure Resource Group to place VM"
     echo "   -h:        show this help message"
 }
 
-optstring="arl:h"
+optstring="a:i:l:hr:"
 
 while getopts ${optstring} arg; do
   case ${arg} in
@@ -32,6 +33,9 @@ while getopts ${optstring} arg; do
       ;;
     a)
       ARCH=$OPTARG
+      ;;
+    i)
+      INSTANCE_NAME=$OPTARG
       ;;
     l)
       LOCATION=$OPTARG
@@ -49,8 +53,6 @@ while getopts ${optstring} arg; do
       ;;
   esac
 done
-
-INSTANCE_NAME=${!#}
 
 if [ -z "$RESOURCE_GROUP" ]; then
     echo "Error: Invalid resource group specified - [$RESOURCE_GROUP]"
@@ -79,8 +81,8 @@ case $ARCH in
         exit 2
 esac
 
-if [ -z "$INSTANCE_NAME"]; then
-    echo "Error: Invalid instance name specified - [$INSTANCE_NAME"
+if [ -z "$INSTANCE_NAME" ]; then
+    echo "Error: Invalid instance name specified - [$INSTANCE_NAME]"
     showUsage
     exit 3
 fi
