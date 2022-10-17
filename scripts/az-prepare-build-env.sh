@@ -8,6 +8,7 @@ sudo tdnf install -y \
 	git \
 	golang \
 	make \
+	moby-cli \
 	moby-containerd \
 	moby-engine \
 	moby-runc \
@@ -18,3 +19,5 @@ sudo tdnf install -y \
 	wget
 
 sudo usermod -aG docker $USER
+
+echo "Info: Re-login to session or reboot the system"
