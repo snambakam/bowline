@@ -8,7 +8,7 @@ sudo tdnf install -y \
 	fakeroot \
 	gawk \
 	git \
-	golang \
+	golang-1.17.13 \
 	make \
 	moby-cli \
 	moby-containerd \
