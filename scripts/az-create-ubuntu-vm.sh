@@ -1,11 +1,11 @@
 #!/bin/bash
 
-MARINER_IMAGE_ARM64=MicrosoftCBLMariner:cbl-mariner:cbl-mariner-2-arm64:2.20220527.01
-MARINER_IMAGE_X86_64=MicrosoftCBLMariner:cbl-mariner:cbl-mariner-2:latest
+UBUNTU_IMAGE_ARM64=Canonical:0001-com-ubuntu-server-jammy:22_04-lts-arm64:22.04.202209211
+UBUNTU_IMAGE_X86_64=UbuntuLTS
 LOCATION=westus2
 SIZE_ARM64=Standard_D16darm_V3
 SIZE_X86_64=Standard_D16d_v4
-MARINER_IMAGE=
+UBUNTU_IMAGE=
 SIZE=
 
 USERNAME=`whoami`
@@ -14,7 +14,7 @@ RESOURCE_GROUP=$USERNAME-dev-test
 ARCH=
 
 function showUsage() {
-    echo "Usage: az-create-mariner-vm.sh <options>"
+    echo "Usage: az-create-ubuntu-vm.sh <options>"
     echo "   -a <arch>: List images for specified architecture"
     echo "              arch: { x86_64, arm64}"
     echo "   -i <instance name>"
@@ -68,11 +68,11 @@ fi
 
 case $ARCH in
     x86_64)
-        MARINER_IMAGE=$MARINER_IMAGE_X86_64
+        UBUNTU_IMAGE=$UBUNTU_IMAGE_X86_64
         SIZE=$SIZE_X86_64
         ;;
     arm64)
-        MARINER_IMAGE=$MARINER_IMAGE_ARM64
+        UBUNTU_IMAGE=$UBUNTU_IMAGE_ARM64
         SIZE=$SIZE_ARM64
         ;;
     *)
@@ -90,7 +90,7 @@ fi
 az vm create \
 	--resource-group $RESOURCE_GROUP \
 	--name $INSTANCE_NAME \
-	--image $MARINER_IMAGE \
+	--image $UBUNTU_IMAGE \
 	--os-disk-size-gb 60 \
 	--size $SIZE \
 	--public-ip-sku Standard \
