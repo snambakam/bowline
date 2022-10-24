@@ -1,0 +1,15 @@
+{
+    "SystemConfigs": [
+        {
+            "Name": "mariner-bowline",
+            "Hostname": "mariner-bowline",
+            "PackageLists": [
+                "lists/base.json",
+                "lists/bowline.json"
+            ],
+            "KernelOptions": {
+                "default": "bowline-kernel-rt"
+            }
+        }
+    ]
+}
