@@ -73,21 +73,26 @@ function showUsage() {
 	echo "  [-p]:	Build the packages"
 }
 
+if [ -z "${OPTIONS}" ]; then
+	showUsage
+	exit 1
+fi
+
 while getopts "hipt" OPTIONS; do
   case "${OPTIONS}" in
     h )
-			showUsage
-			exit 0
-			;;
-		i )
-			buildImage
-			;;
-		p )
-			buildPackages
-			;;
-		t )
-			getToolkit
-			;;
+	showUsage
+	exit 0
+	;;
+    i )
+	buildImage
+	;;
+    p )
+	buildPackages
+	;;
+    t )
+	getToolkit
+	;;
     \? )
         echo "-- Error - Invalid Option: -$OPTARG" 1>&2
         exit 1
