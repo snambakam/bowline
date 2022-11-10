@@ -5,19 +5,12 @@
         "cloud-utils-growpart",
         "core-packages-base-image",
         "dhcp-client",
-        "driverctl",
         "libibverbs",
         "linux-firmware",
         "openssh-server",
         "vim",
         "less",
         "grub2-efi-binary",
-        "shim",
-        "rtctl",
-        "rt-setup",
-        "rt-tests",
-        "tuna",
-        "tuned",
         "initramfs"
     ]
 }

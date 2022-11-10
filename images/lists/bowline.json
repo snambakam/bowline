@@ -1,5 +1,5 @@
 {
     "packages": [
-        "bowline-kernel"
+        "kernel-5.15.74.1-3.cm2"
     ]
 }

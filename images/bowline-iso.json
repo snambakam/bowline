@@ -8,7 +8,7 @@
                 "lists/bowline.json"
             ],
             "KernelOptions": {
-                "default": "bowline-kernel"
+                "default": "kernel-5.15.74.1-3.cm2"
             }
         }
     ]
