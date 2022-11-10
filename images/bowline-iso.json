@@ -8,7 +8,7 @@
                 "lists/bowline.json"
             ],
             "KernelOptions": {
-                "default": "bowline-kernel-rt"
+                "default": "bowline-kernel"
             }
         }
     ]
