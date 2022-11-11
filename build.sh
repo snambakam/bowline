@@ -38,11 +38,11 @@ function buildPackages() {
 	echo "Building the Bowline packages..."
 	getToolkit
 	pushd $SRC_ROOT/toolkit
+	rm -f $SRC_ROOT/build/make_status/build_srpms.flag
 	sudo make -j$(nproc) build-packages \
 		CONFIG_FILE= \
 		SPECS_DIR=../SPECS \
 		OUT_DIR=$OUT_DIR \
-		REBUILD_TOOLS=y \
 		PACKAGE_REBUILD_LIST="$@" \
 		PACKAGE_BUILD_LIST="$@" \
 		SOURCE_URL=https://cblmarinerstorage.blob.core.windows.net/sources/core \
@@ -58,7 +58,6 @@ function buildImage() {
 	pushd $SRC_ROOT/toolkit
 	sudo make iso \
   	REBUILD_PACKAGES=n \
-  	REBUILD_TOOLS=y \
   	CONFIG_FILE=../images/bowline-iso.json \
   	USE_PREVIEW_REPO=n \
   	LOG_LEVEL=$BOWLINE_LOG_LEVEL
