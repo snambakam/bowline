@@ -17,13 +17,14 @@ function showUsage() {
     echo "Usage: az-create-mariner-vm.sh <options>"
     echo "   -a <arch>: List images for specified architecture"
     echo "              arch: { x86_64, arm64}"
-    echo "   -i <instance name>"
+    echo "   -n <instance name>"
+    echo "   -i <image name>"
     echo "   -l <location>: Azure Location"
     echo "   -r <resource group>: Azure Resource Group to place VM"
     echo "   -h:        show this help message"
 }
 
-optstring="a:i:l:hr:"
+optstring="a:i:n:l:hr:"
 
 while getopts ${optstring} arg; do
   case ${arg} in
@@ -34,8 +35,11 @@ while getopts ${optstring} arg; do
     a)
       ARCH=$OPTARG
       ;;
-    i)
+    n)
       INSTANCE_NAME=$OPTARG
+      ;;
+    i)
+      MARINER_IMAGE=$OPTARG
       ;;
     l)
       LOCATION=$OPTARG
@@ -68,11 +72,15 @@ fi
 
 case $ARCH in
     x86_64)
-        MARINER_IMAGE=$MARINER_IMAGE_X86_64
+        if [ -z "$MARINER_IMAGE" ]; then
+            MARINER_IMAGE=$MARINER_IMAGE_X86_64
+        fi
         SIZE=$SIZE_X86_64
         ;;
     arm64)
-        MARINER_IMAGE=$MARINER_IMAGE_ARM64
+        if [ -z "$MARINER_IMAGE" ]; then
+            MARINER_IMAGE=$MARINER_IMAGE_ARM64
+        fi
         SIZE=$SIZE_ARM64
         ;;
     *)
@@ -80,6 +88,11 @@ case $ARCH in
         showUsage
         exit 2
 esac
+
+if [ -z "$MARINER_IMAGE" ]; then
+    echo "Error: Invalid image specified - [$MARINER_IMAGE]"
+    exit 4
+fi
 
 if [ -z "$INSTANCE_NAME" ]; then
     echo "Error: Invalid instance name specified - [$INSTANCE_NAME]"
