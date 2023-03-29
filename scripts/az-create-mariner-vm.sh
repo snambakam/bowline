@@ -7,6 +7,7 @@ SIZE_ARM64=Standard_D16darm_V3
 SIZE_X86_64=Standard_D16d_v4
 MARINER_IMAGE=
 SIZE=
+TAGS="AzSecPackAutoConfigReady=true"
 
 USERNAME=`whoami`
 RESOURCE_GROUP=$USERNAME-dev-test
@@ -110,4 +111,5 @@ az vm create \
 	--admin-username $USERNAME \
 	--assign-identity [system] \
 	--ssh-key-values ~/.ssh/id_rsa_azure.pub \
+	--tags $TAGS \
 	--location $LOCATION
