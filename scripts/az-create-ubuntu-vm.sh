@@ -17,13 +17,14 @@ function showUsage() {
     echo "Usage: az-create-ubuntu-vm.sh <options>"
     echo "   -a <arch>: List images for specified architecture"
     echo "              arch: { x86_64, arm64}"
-    echo "   -i <instance name>"
+    echo "   -n <instance name>"
+    echo "   -i <image name>"
     echo "   -l <location>: Azure Location"
     echo "   -r <resource group>: Azure Resource Group to place VM"
     echo "   -h:        show this help message"
 }
 
-optstring="a:i:l:hr:"
+optstring="a:i:n:l:hr:"
 
 while getopts ${optstring} arg; do
   case ${arg} in
@@ -34,8 +35,11 @@ while getopts ${optstring} arg; do
     a)
       ARCH=$OPTARG
       ;;
-    i)
+    n)
       INSTANCE_NAME=$OPTARG
+      ;;
+    i)
+      UBUNTU_IMAGE=$OPTARG
       ;;
     l)
       LOCATION=$OPTARG
@@ -68,11 +72,15 @@ fi
 
 case $ARCH in
     x86_64)
-        UBUNTU_IMAGE=$UBUNTU_IMAGE_X86_64
+        if [ -z "$UBUNTU_IMAGE" ]; then
+            UBUNTU_IMAGE=$UBUNTU_IMAGE_X86_64
+        fi
         SIZE=$SIZE_X86_64
         ;;
     arm64)
-        UBUNTU_IMAGE=$UBUNTU_IMAGE_ARM64
+        if [ -z "$UBUNTU_IMAGE" ]; then
+            UBUNTU_IMAGE=$UBUNTU_IMAGE_ARM64
+        fi
         SIZE=$SIZE_ARM64
         ;;
     *)
@@ -80,6 +88,11 @@ case $ARCH in
         showUsage
         exit 2
 esac
+
+if [ -z "$UBUNTU_IMAGE" ]; then
+    echo "Error: Invalid image specified - [$MARINER_IMAGE]"
+    exit 4
+fi
 
 if [ -z "$INSTANCE_NAME" ]; then
     echo "Error: Invalid instance name specified - [$INSTANCE_NAME]"
@@ -97,4 +110,5 @@ az vm create \
 	--admin-username $USERNAME \
 	--assign-identity [system] \
 	--ssh-key-values ~/.ssh/id_rsa_azure.pub \
+	--tags $TAGS \
 	--location $LOCATION
