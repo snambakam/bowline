@@ -10,6 +10,7 @@ SIZE=
 
 USERNAME=`whoami`
 RESOURCE_GROUP=$USERNAME-dev-test
+TAGS="AzSecPackAutoConfigReady=true owner=$USERNAME"
 
 ARCH=
 

@@ -7,10 +7,10 @@ SIZE_ARM64=Standard_D16darm_V3
 SIZE_X86_64=Standard_D16d_v4
 MARINER_IMAGE=
 SIZE=
-TAGS="AzSecPackAutoConfigReady=true"
 
 USERNAME=`whoami`
 RESOURCE_GROUP=$USERNAME-dev-test
+TAGS="AzSecPackAutoConfigReady=true owner=$USERNAME"
 
 ARCH=
 
