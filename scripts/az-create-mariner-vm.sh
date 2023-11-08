@@ -3,7 +3,7 @@
 MARINER_IMAGE_ARM64=MicrosoftCBLMariner:cbl-mariner:cbl-mariner-2-arm64:2.20220527.01
 MARINER_IMAGE_X86_64=MicrosoftCBLMariner:cbl-mariner:cbl-mariner-2:latest
 LOCATION=westus2
-SIZE_ARM64=Standard_D16darm_V3
+SIZE_ARM64=Standard_D64pds_v5
 SIZE_X86_64=Standard_D16d_v4
 MARINER_IMAGE=
 SIZE=
