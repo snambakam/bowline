@@ -7,6 +7,7 @@ SIZE_ARM64=Standard_D64pds_v5
 SIZE_X86_64=Standard_D16d_v4
 MARINER_IMAGE=
 SIZE=
+SSH_KEY_PATH=
 
 USERNAME=`whoami`
 RESOURCE_GROUP=$USERNAME-dev-test
@@ -20,12 +21,14 @@ function showUsage() {
     echo "              arch: { x86_64, arm64}"
     echo "   -n <instance name>"
     echo "   -i <image name>"
+    echo "   -k <path to ssh public key>"
+    echo "   -s <size>"
     echo "   -l <location>: Azure Location"
     echo "   -r <resource group>: Azure Resource Group to place VM"
     echo "   -h:        show this help message"
 }
 
-optstring="a:i:n:l:hr:"
+optstring="a:i:k:n:l:hr:s:"
 
 while getopts ${optstring} arg; do
   case ${arg} in
@@ -42,11 +45,17 @@ while getopts ${optstring} arg; do
     i)
       MARINER_IMAGE=$OPTARG
       ;;
+    k)
+      SSH_KEY_PATH=$OPTARG
+      ;;
     l)
       LOCATION=$OPTARG
       ;;
     r)
       RESOURCE_GROUP=$OPTARG
+      ;;
+    s)
+      SIZE=$OPTARG
       ;;
     :)
       echo "$0: Must supply an argument to -$OPTARG." >&2
@@ -71,24 +80,30 @@ if [ -z "$LOCATION" ]; then
     exit 1
 fi
 
-case $ARCH in
-    x86_64)
-        if [ -z "$MARINER_IMAGE" ]; then
-            MARINER_IMAGE=$MARINER_IMAGE_X86_64
-        fi
-        SIZE=$SIZE_X86_64
-        ;;
-    arm64)
-        if [ -z "$MARINER_IMAGE" ]; then
-            MARINER_IMAGE=$MARINER_IMAGE_ARM64
-        fi
-        SIZE=$SIZE_ARM64
-        ;;
-    *)
-        echo "Error: Invalid architecture specified - [$ARCH]"
-        showUsage
-        exit 2
-esac
+if [ -z "$SIZE" ]; then
+    case $ARCH in
+        x86_64)
+            if [ -z "$MARINER_IMAGE" ]; then
+                MARINER_IMAGE=$MARINER_IMAGE_X86_64
+            fi
+            SIZE=$SIZE_X86_64
+            ;;
+        arm64)
+            if [ -z "$MARINER_IMAGE" ]; then
+                MARINER_IMAGE=$MARINER_IMAGE_ARM64
+            fi
+            SIZE=$SIZE_ARM64
+            ;;
+        *)
+            echo "Error: Invalid architecture specified - [$ARCH]"
+            showUsage
+            exit 2
+    esac
+fi
+
+if [ -z "$SSH_KEY_PATH" ]; then
+  SSH_KEY_PATH="~/.ssh/id_rsa_azure.pub"
+fi
 
 if [ -z "$MARINER_IMAGE" ]; then
     echo "Error: Invalid image specified - [$MARINER_IMAGE]"
@@ -110,6 +125,6 @@ az vm create \
 	--public-ip-sku Standard \
 	--admin-username $USERNAME \
 	--assign-identity [system] \
-	--ssh-key-values ~/.ssh/id_rsa_azure.pub \
+	--ssh-key-values "$SSH_KEY_PATH" \
 	--tags $TAGS \
 	--location $LOCATION
