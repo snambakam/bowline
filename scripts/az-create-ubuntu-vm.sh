@@ -3,7 +3,7 @@
 UBUNTU_IMAGE_ARM64=Canonical:0001-com-ubuntu-server-jammy:22_04-lts-arm64:22.04.202209211
 UBUNTU_IMAGE_X86_64=UbuntuLTS
 LOCATION=westus2
-SIZE_ARM64=Standard_D16darm_V3
+SIZE_ARM64=Standard_D64pds_v5
 SIZE_X86_64=Standard_D16d_v4
 UBUNTU_IMAGE=
 SIZE=
@@ -22,10 +22,11 @@ function showUsage() {
     echo "   -i <image name>"
     echo "   -l <location>: Azure Location"
     echo "   -r <resource group>: Azure Resource Group to place VM"
+    echo "   -s <size>: Azure VM Size"
     echo "   -h:        show this help message"
 }
 
-optstring="a:i:n:l:hr:"
+optstring="a:i:n:l:hr:s:"
 
 while getopts ${optstring} arg; do
   case ${arg} in
@@ -47,6 +48,9 @@ while getopts ${optstring} arg; do
       ;;
     r)
       RESOURCE_GROUP=$OPTARG
+      ;;
+    s)
+      SIZE=$OPTARG
       ;;
     :)
       echo "$0: Must supply an argument to -$OPTARG." >&2
@@ -71,24 +75,26 @@ if [ -z "$LOCATION" ]; then
     exit 1
 fi
 
-case $ARCH in
-    x86_64)
-        if [ -z "$UBUNTU_IMAGE" ]; then
-            UBUNTU_IMAGE=$UBUNTU_IMAGE_X86_64
-        fi
-        SIZE=$SIZE_X86_64
-        ;;
-    arm64)
-        if [ -z "$UBUNTU_IMAGE" ]; then
-            UBUNTU_IMAGE=$UBUNTU_IMAGE_ARM64
-        fi
-        SIZE=$SIZE_ARM64
-        ;;
-    *)
-        echo "Error: Invalid architecture specified - [$ARCH]"
-        showUsage
-        exit 2
-esac
+if [ -z "$SIZE" ]; then
+    case $ARCH in
+        x86_64)
+            if [ -z "$UBUNTU_IMAGE" ]; then
+                UBUNTU_IMAGE=$UBUNTU_IMAGE_X86_64
+            fi
+            SIZE=$SIZE_X86_64
+            ;;
+        arm64)
+            if [ -z "$UBUNTU_IMAGE" ]; then
+                UBUNTU_IMAGE=$UBUNTU_IMAGE_ARM64
+            fi
+            SIZE=$SIZE_ARM64
+            ;;
+        *)
+            echo "Error: Invalid architecture specified - [$ARCH]"
+            showUsage
+            exit 2
+    esac
+fi
 
 if [ -z "$UBUNTU_IMAGE" ]; then
     echo "Error: Invalid image specified - [$MARINER_IMAGE]"

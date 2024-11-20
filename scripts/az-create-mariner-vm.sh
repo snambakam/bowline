@@ -25,6 +25,7 @@ function showUsage() {
     echo "   -s <size>"
     echo "   -l <location>: Azure Location"
     echo "   -r <resource group>: Azure Resource Group to place VM"
+    echo "   -s <vm size>: Azure VM Size"
     echo "   -h:        show this help message"
 }
 
