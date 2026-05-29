@@ -8,6 +8,7 @@ SIZE_X86_64=Standard_DS1_v2
 MARINER_IMAGE=
 SIZE=
 SSH_KEY_PATH=
+ZONE=
 
 USERNAME=`whoami`
 RESOURCE_GROUP=$USERNAME-dev-test
@@ -24,12 +25,13 @@ function showUsage() {
     echo "   -k <path to ssh public key>"
     echo "   -s <size>"
     echo "   -l <location>: Azure Location"
+    echo "   -z <zone>: Availability Zone (for example: 1, 2, or 3)"
     echo "   -r <resource group>: Azure Resource Group to place VM"
     echo "   -s <vm size>: Azure VM Size"
     echo "   -h:        show this help message"
 }
 
-optstring="a:i:k:n:l:hr:s:"
+optstring="a:i:k:n:l:z:hr:s:"
 
 while getopts ${optstring} arg; do
   case ${arg} in
@@ -51,6 +53,9 @@ while getopts ${optstring} arg; do
       ;;
     l)
       LOCATION=$OPTARG
+      ;;
+    z)
+      ZONE=$OPTARG
       ;;
     r)
       RESOURCE_GROUP=$OPTARG
@@ -140,6 +145,10 @@ AZ_VM_CREATE_ARGS=(
   --tags "$TAGS"
   --location "$LOCATION"
 )
+
+if [ -n "$ZONE" ]; then
+  AZ_VM_CREATE_ARGS+=(--zone "$ZONE")
+fi
 
 az vm create "${AZ_VM_CREATE_ARGS[@]}"
 
